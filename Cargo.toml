@@ -1,0 +1,9 @@
+[package]
+name = "cli-image"
+description = "A cli tool for preview images with ascii characters"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.3.23", features = ["derive"] }
+image = "0.24.7"
