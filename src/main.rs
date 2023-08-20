@@ -9,7 +9,7 @@ struct Cli {
   file: String,
   
   /// The max size of the preview in the screen (nº of ascii pixels)
-  #[arg(short, long, default_value_t = 300)]
+  #[arg(short, long, default_value_t = 100)]
   max_size: u32,
 
   /// Preview image with color (default = false)
