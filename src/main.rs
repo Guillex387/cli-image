@@ -1,6 +1,7 @@
+mod render;
 use std::process::ExitCode;
 use clap::Parser;
-mod render;
+use render::Render;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -15,7 +16,11 @@ struct Cli {
   /// Preview image with color (default = false)
   /// Note: this feature is only to true color terminals
   #[arg(short, long, default_value_t = false)]
-  color: bool
+  color: bool,
+
+  /// Omits the ascii distorsion filter (default = false)
+  #[arg(short, long, default_value_t = false)]
+  omit_ascii_distorsion: bool
 }
 
 fn main() -> ExitCode {
@@ -27,7 +32,8 @@ fn main() -> ExitCode {
       return ExitCode::FAILURE;
     }
   };
-  match render::render(&img, cli.max_size, cli.color) {
+  let render: Render = Render::new(img, cli.max_size, cli.color, !cli.omit_ascii_distorsion);
+  match render.paint() {
     Ok(_) => {},
     Err(_) => {
       println!("Error rendering the image");
