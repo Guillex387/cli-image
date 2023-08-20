@@ -4,7 +4,7 @@ use ansi_term::Colour;
 
 const DENSITY: &'static str = " _.,-=+:;cba!?0123456789$W#@Ñ";
 
-fn density(rgb: &Rgba<u8>) -> char {
+fn ascii_pixel(rgb: &Rgba<u8>) -> char {
   let [red, green, blue, alpha] = rgb.0;
   let opacity = alpha as f32 / 255.0;
   let [redf, greenf, bluef] = [red as f32, green as f32, blue as f32];
@@ -22,25 +22,13 @@ fn colorize(pixel: char, color: &Rgba<u8>) -> String {
 }
 
 fn adjust_scale(image: &DynamicImage, max_size: u32) -> DynamicImage {
-  let (size_x, size_y) = image.dimensions();
+  // Prevents deformations caused by the dimension of the characters
+  let deformed = image.resize_exact(image.width() * 2, image.height(), FilterType::Triangle);
+  let (size_x, size_y) = deformed.dimensions();
   if size_x <= max_size && size_y <= max_size {
-    return image.clone();
+    return deformed;
   }
-  let horizontal = size_x >= size_y;
-  let aspect = size_x as f32 / size_y as f32;
-  let new_x: u32 =
-    if horizontal {
-      max_size
-    } else {
-      (max_size as f32 * aspect).round() as u32
-    };
-  let new_y: u32 = 
-    if horizontal {
-      (max_size as f32 * aspect).round() as u32
-    } else {
-      max_size
-    };
-  image.resize(new_x, new_y, FilterType::Triangle)
+  deformed.resize(max_size, max_size, FilterType::Triangle)
 }
 
 fn calculate_bytes(image: &DynamicImage) -> usize {
@@ -63,9 +51,9 @@ pub fn render(image: &DynamicImage, max_size: u32, color: bool) -> io::Result<()
       last_line = y;
     }
     let render_pixel = if color {
-      colorize(density(pixel), pixel)
+      colorize(ascii_pixel(pixel), pixel)
     } else {
-      density(pixel).to_string()
+      ascii_pixel(pixel).to_string()
     }; 
     paint_buffer.push_str(render_pixel.as_str());
   }
