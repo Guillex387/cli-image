@@ -96,7 +96,6 @@ impl Render {
     } else {
       ((self.max_size as f32 * aspect).round() as u32, self.max_size)
     };
-    println!("Resized {}x{} to {}x{}", width, height, new_width, new_height);
     self.image = self.image.resize_exact(new_width, new_height, FilterType::Triangle);
   }
 
