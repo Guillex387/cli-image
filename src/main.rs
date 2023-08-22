@@ -32,7 +32,8 @@ fn main() -> ExitCode {
       return ExitCode::FAILURE;
     }
   };
-  let render: Render = Render::new(img, cli.max_size, cli.color, !cli.omit_ascii_distorsion);
+  let mut render: Render = Render::new(img, cli.max_size, cli.color, !cli.omit_ascii_distorsion);
+  render.adjust_scale();
   match render.paint() {
     Ok(_) => {},
     Err(_) => {
@@ -40,5 +41,6 @@ fn main() -> ExitCode {
       return ExitCode::FAILURE;
     }
   };
+
   ExitCode::SUCCESS
 }

@@ -77,26 +77,33 @@ impl Render {
 
   /// Adjust the scale of the image based on the
   /// `max_size` and the `prevent_ascii_distorsion` 
-  fn adjust_scale(&self) -> DynamicImage {
-    let adjusted = if self.prevent_ascii_distorsion {
-      self.image.resize_exact(self.image.width() * 2, self.image.height(), FilterType::Triangle)
-    } else {
-      self.image.clone()
-    };
-    let (size_x, size_y) = adjusted.dimensions();
-    
-    if size_x <= self.max_size && size_y <= self.max_size {
-      return adjusted;
+  pub fn adjust_scale(&mut self) {
+    let (mut width, height) = self.image.dimensions();
+    if width <= self.max_size && height <= self.max_size {
+      return;
     }
-    adjusted.resize(self.max_size, self.max_size, FilterType::Triangle)
+    if self.prevent_ascii_distorsion {
+      width *= 2;
+    }
+    let horizontal = width >= height;
+    let aspect = if horizontal {
+      height as f32 / width as f32
+    } else {
+      width as f32 / height as f32
+    };
+    let (new_width, new_height) = if horizontal {
+      (self.max_size, (self.max_size as f32 * aspect).round() as u32)
+    } else {
+      ((self.max_size as f32 * aspect).round() as u32, self.max_size)
+    };
+    println!("Resized {}x{} to {}x{}", width, height, new_width, new_height);
+    self.image = self.image.resize_exact(new_width, new_height, FilterType::Triangle);
   }
 
   /// Paint the render in the stdout
   pub fn paint(&self) -> io::Result<()> {
-    let scaled = self.adjust_scale();
-    let buffer = scaled.to_rgba8();
-    let bytes_estimation = calculate_bytes(&scaled, self.color);
-    drop(scaled);
+    let buffer = self.image.to_rgba8();
+    let bytes_estimation = calculate_bytes(&self.image, self.color);
 
     let mut paint_buffer = String::new();
     paint_buffer.reserve(bytes_estimation);
@@ -112,8 +119,6 @@ impl Render {
 
     paint_buffer.push('\n');
     io::stdout().write_all(paint_buffer.as_bytes())?;
-    // DEBUG
-    println!("\nEstimation {}, Real {}", bytes_estimation, paint_buffer.len());
     Ok(())
   }
 }
