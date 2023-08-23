@@ -12,8 +12,8 @@ pub struct Render {
   max_size: u32,
   /// RGB render
   color: bool,
-  /// Prevents a render distorsion caused by the ascii pixels aspect
-  prevent_ascii_distorsion: bool
+  /// Prevents a render distortion caused by the ascii pixels aspect
+  prevent_ascii_distortion: bool
 }
 
 /// Put a color in the character
@@ -55,9 +55,9 @@ impl Render {
   /// * `image` - The image for render
   /// * `max_size` - The max size of the `image`
   /// * `color` - RGB render
-  /// * `prevent_ascii_distorsion` - Prevents a render distorsion caused by the ascii pixels aspect
-  pub fn new(image: DynamicImage, max_size: u32, color: bool, prevent_ascii_distorsion: bool) -> Self {
-    Render { image, max_size, color, prevent_ascii_distorsion }
+  /// * `prevent_ascii_distortion` - Prevents a render distortion caused by the ascii pixels aspect
+  pub fn new(image: DynamicImage, max_size: u32, color: bool, prevent_ascii_distortion: bool) -> Self {
+    Render { image, max_size, color, prevent_ascii_distortion }
   }
 
   /// Calculates an ascii pixel with a `rgb_pixel
@@ -76,13 +76,13 @@ impl Render {
   }
 
   /// Adjust the scale of the image based on the
-  /// `max_size` and the `prevent_ascii_distorsion` 
+  /// `max_size` and the `prevent_ascii_distortion` 
   pub fn adjust_scale(&mut self) {
     let (mut width, height) = self.image.dimensions();
     if width <= self.max_size && height <= self.max_size {
       return;
     }
-    if self.prevent_ascii_distorsion {
+    if self.prevent_ascii_distortion {
       width *= 2;
     }
     let horizontal = width >= height;

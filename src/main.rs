@@ -18,9 +18,9 @@ struct Cli {
   #[arg(short, long, default_value_t = false)]
   color: bool,
 
-  /// Omits the ascii distorsion filter (default = false)
+  /// Omits the ascii distortion filter (default = false)
   #[arg(short, long, default_value_t = false)]
-  omit_ascii_distorsion: bool
+  omit_ascii_distortion: bool
 }
 
 fn main() -> ExitCode {
@@ -32,7 +32,7 @@ fn main() -> ExitCode {
       return ExitCode::FAILURE;
     }
   };
-  let mut render: Render = Render::new(img, cli.max_size, cli.color, !cli.omit_ascii_distorsion);
+  let mut render: Render = Render::new(img, cli.max_size, cli.color, !cli.omit_ascii_distortion);
   render.adjust_scale();
   match render.paint() {
     Ok(_) => {},
