@@ -96,8 +96,9 @@ impl Render {
     } else {
       FilterType::Nearest
     };
-    self.image = self.image.resize_exact(width, height, filter);
+
     if smaller {
+      self.image = self.image.resize_exact(width, height, filter);
       return;
     }
 
