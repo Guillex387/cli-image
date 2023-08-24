@@ -1,7 +1,7 @@
 # cli-image
 
 A cli tool for preview images with ascii characters.
-Support colors, adjustable resolution and alpha channel.
+Support colors, adjustable resolution, antialiasing and alpha channel.
 
 ## Captures
 
@@ -46,6 +46,7 @@ Options:
   -m, --max-size <MAX_SIZE>    The max size of the preview in the screen (nº of ascii pixels) [default: 100]
   -c, --color                  Preview image with color (default = false) Note: this feature is only to true color terminals
   -o, --omit-ascii-distortion  Omits the ascii distortion filter (default = false)
+  -n, --not-antialiasing       Omits the antialiasing filter (default = false)
   -h, --help                   Print help
   -V, --version                Print version
 ```

@@ -13,7 +13,9 @@ pub struct Render {
   /// RGB render
   color: bool,
   /// Prevents a render distortion caused by the ascii pixels aspect
-  prevent_ascii_distortion: bool
+  prevent_ascii_distortion: bool,
+  /// Image antialiasing
+  antialiasing: bool
 }
 
 /// Put a color in the character
@@ -56,8 +58,14 @@ impl Render {
   /// * `max_size` - The max size of the `image`
   /// * `color` - RGB render
   /// * `prevent_ascii_distortion` - Prevents a render distortion caused by the ascii pixels aspect
-  pub fn new(image: DynamicImage, max_size: u32, color: bool, prevent_ascii_distortion: bool) -> Self {
-    Render { image, max_size, color, prevent_ascii_distortion }
+  /// * `antialiasing` - Image antialiasing
+  pub fn new(
+    image: DynamicImage,
+    max_size: u32,
+    color: bool,
+    prevent_ascii_distortion: bool,
+    antialiasing: bool) -> Self {
+    Render { image, max_size, color, prevent_ascii_distortion, antialiasing }
   }
 
   /// Calculates an ascii pixel with a `rgb_pixel
@@ -79,12 +87,20 @@ impl Render {
   /// `max_size` and the `prevent_ascii_distortion` 
   pub fn adjust_scale(&mut self) {
     let (mut width, height) = self.image.dimensions();
-    if width <= self.max_size && height <= self.max_size {
-      return;
-    }
+    let smaller = width <= self.max_size && height <= self.max_size;
     if self.prevent_ascii_distortion {
       width *= 2;
     }
+    let filter = if self.antialiasing {
+      FilterType::Triangle
+    } else {
+      FilterType::Nearest
+    };
+    self.image = self.image.resize_exact(width, height, filter);
+    if smaller {
+      return;
+    }
+
     let horizontal = width >= height;
     let aspect = if horizontal {
       height as f32 / width as f32
@@ -96,7 +112,7 @@ impl Render {
     } else {
       ((self.max_size as f32 * aspect).round() as u32, self.max_size)
     };
-    self.image = self.image.resize_exact(new_width, new_height, FilterType::Triangle);
+    self.image = self.image.resize_exact(new_width, new_height, filter);
   }
 
   /// Paint the render in the stdout

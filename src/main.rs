@@ -20,7 +20,11 @@ struct Cli {
 
   /// Omits the ascii distortion filter (default = false)
   #[arg(short, long, default_value_t = false)]
-  omit_ascii_distortion: bool
+  omit_ascii_distortion: bool,
+
+  /// Omits the antialiasing filter (default = false)
+  #[arg(short, long, default_value_t = false)]
+  not_antialiasing: bool
 }
 
 fn main() -> ExitCode {
@@ -32,7 +36,13 @@ fn main() -> ExitCode {
       return ExitCode::FAILURE;
     }
   };
-  let mut render: Render = Render::new(img, cli.max_size, cli.color, !cli.omit_ascii_distortion);
+  let mut render: Render = Render::new(
+    img,
+    cli.max_size,
+    cli.color,
+    !cli.omit_ascii_distortion,
+    !cli.not_antialiasing
+  );
   render.adjust_scale();
   match render.paint() {
     Ok(_) => {},
