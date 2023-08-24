@@ -13,16 +13,13 @@ Support colors, adjustable resolution and alpha channel.
 
 | Format   | Decoding                                  |
 | -------- | ----------------------------------------- |
-| AVIF     | Only 8-bit \*\*                           |
 | BMP      | Yes                                       |
-| DDS      | DXT1, DXT3, DXT5                          |
 | Farbfeld | Yes                                       |
 | GIF      | Yes                                       |
 | ICO      | Yes                                       |
 | JPEG     | Baseline and progressive                  |
 | OpenEXR  | Rgb32F, Rgba32F (no dwa compression)      |
 | PNG      | All supported color types                 |
-| PNM      | PBM, PGM, PPM, standard PAM               |
 | QOI      | Yes                                       |
 | TGA      | Yes                                       |
 | TIFF     | Baseline(no fax support) + LZW + PackBits |
