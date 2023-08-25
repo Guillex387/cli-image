@@ -2,7 +2,14 @@ use std::io::{self, Write};
 use image::{DynamicImage, GenericImageView, imageops::FilterType, Rgba};
 use ansi_term::Colour;
 
-const DENSITY: &'static str = " _.,-=+:;cba!?0123456789$W#@Ñ";
+/// Character array to represent the brightness of the pixels
+const DENSITY: [char; 29] = [
+  ' ', '_', '.', ',', '-', '=',
+  '+', ':', ';', 'c', 'b', 'a',
+  '!', '?', '0', '1', '2', '3',
+  '4', '5', '6', '7', '8', '9',
+  '$', 'W', '#', '@', 'Ñ'
+];
 
 /// An ascii image renderer
 pub struct Render {
@@ -72,9 +79,9 @@ impl Render {
   fn ascii_pixel(&self, rgb_pixel: &Rgba<u8>) -> String {
     let brightness = brightness(rgb_pixel);
 
-    let density_len = DENSITY.chars().count();
+    let density_len = DENSITY.len();
     let density_index = (brightness * density_len as f32 - 1.0).round() as usize;
-    let pixel = DENSITY.chars().nth(density_index).unwrap();
+    let pixel = DENSITY[density_index];
 
     if self.color {
       colorize(pixel, rgb_pixel)
