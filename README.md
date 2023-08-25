@@ -3,6 +3,13 @@
 A cli tool for preview images with ascii characters.
 Support colors, adjustable resolution, antialiasing and alpha channel.
 
+## Install
+
+You can use the tool on linux and windows, see the [release page](https://github.com/Guillex387/cli-image/releases/latest).
+
+But if you use it on windows and don't work well,
+install [C++ tools for windows](https://aka.ms/vs/17/release/vc_redist.x86.exe).
+
 ## Captures
 
 ![github_test](/assets/github_test.png)
